@@ -33,15 +33,19 @@ public class AppWidget extends AppWidgetProvider {
         c.setTimeInMillis(System.currentTimeMillis());
         long currentHourInMillis = TimeUnit.HOURS.toMillis(c.get(Calendar.HOUR_OF_DAY)) + TimeUnit.MINUTES.toMillis(c.get(Calendar.MINUTE));
         long nextHourInMillis = 0;
-        long displayedHourInMillis = 0;
+        long displayedHourInMillis;
 
+        //TODO: READ HOUR FROM FILE
+        /*
         for(int i=1; i<=16; i++){
             if(MainActivity.hoursInMillis.get(i) > currentHourInMillis){
                 nextHourInMillis = MainActivity.hoursInMillis.get(i);
                 break;
             }
         }
+        */
         displayedHourInMillis = nextHourInMillis-currentHourInMillis;
+
 
         c.setTimeInMillis(displayedHourInMillis);
         String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));

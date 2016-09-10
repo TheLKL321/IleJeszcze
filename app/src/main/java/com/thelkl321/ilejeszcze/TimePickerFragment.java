@@ -2,7 +2,9 @@ package com.thelkl321.ilejeszcze;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +22,7 @@ public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
         final Calendar c = Calendar.getInstance();
@@ -45,28 +50,39 @@ public class TimePickerFragment extends DialogFragment
 
         String minutesOnClock = Integer.toString(minute);
         if (minute < 10) minutesOnClock = "0" + minutesOnClock;
-        text.setText(hourOfDay + ":" + minutesOnClock);
+        text.setText(hourOfDay + getString(R.string.colon) + minutesOnClock);
         text.setVisibility(View.VISIBLE);
 
         // pass hour to MainActivity
-        MainActivity.hoursInMillis.put(buttonNumber, TimeUnit.HOURS.toMillis(hourOfDay)+TimeUnit.MINUTES.toMillis(minute));
+        // MainActivity.hoursInMillis.put(buttonNumber, TimeUnit.HOURS.toMillis(hourOfDay)+TimeUnit.MINUTES.toMillis(minute));
 
-        // create next button
-        Button nextButton = null;
+        // Save the picked hour
+        String string = String.valueOf(TimeUnit.HOURS.toMillis(hourOfDay)+TimeUnit.MINUTES.toMillis(minute));
+        FileOutputStream fOut;
+        try {
+            fOut = getActivity().openFileOutput("hour"+String.valueOf(buttonNumber), Context.MODE_PRIVATE);
+            fOut.write(string.getBytes());
+            fOut.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+
+        // create the next button
+        Button nextButton;
         if (buttonNumber != 16) {
             int nextButtonId = getResources().getIdentifier("button" + (buttonNumber+1), "id", "com.thelkl321.ilejeszcze");
             nextButton = (Button) getActivity().findViewById(nextButtonId);
             nextButton.setVisibility(View.VISIBLE);
         }
 
-        // create previous delete button
+        // create the previous delete button
         if(buttonNumber !=1) {
             int previousDeleteButtonId = getResources().getIdentifier("delete" + (buttonNumber - 1), "id", "com.thelkl321.ilejeszcze");
             Button previousDeleteButton = (Button) getActivity().findViewById(previousDeleteButtonId);
             previousDeleteButton.setVisibility(View.INVISIBLE);
         }
 
-        // create delete button
+        // create the delete button
         int deleteButtonId = getResources().getIdentifier("delete" + (buttonNumber), "id", "com.thelkl321.ilejeszcze");
         Button deleteButton = (Button) getActivity().findViewById(deleteButtonId);
         deleteButton.setVisibility(View.VISIBLE);
