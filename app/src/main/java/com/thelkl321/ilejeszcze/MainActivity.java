@@ -157,4 +157,5 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO: Create on/off switch functionality
+    //TODO: Looks
 }

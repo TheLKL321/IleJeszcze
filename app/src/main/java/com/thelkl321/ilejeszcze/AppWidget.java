@@ -13,7 +13,10 @@ import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import java.io.FileInputStream;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 
@@ -35,17 +38,38 @@ public class AppWidget extends AppWidgetProvider {
         long nextHourInMillis = 0;
         long displayedHourInMillis;
 
-        //TODO: READ HOUR FROM FILE
-        /*
-        for(int i=1; i<=16; i++){
-            if(MainActivity.hoursInMillis.get(i) > currentHourInMillis){
-                nextHourInMillis = MainActivity.hoursInMillis.get(i);
+        // Filling hoursInMillis with data from file
+        int i=1;
+        Map<Integer, Long> hoursInMillis = new TreeMap<>();
+        while (i<17) {
+            try {
+                FileInputStream fIn = context.openFileInput("hour"+String.valueOf(i));
+                int c;
+                String hour = "";
+                while ((c = fIn.read()) != -1) {
+                    hour = hour + Character.toString((char) c);
+                }
+                fIn.close();
+
+                hoursInMillis.put(i, Long.valueOf(hour));
+                i++;
+
+            } catch (java.io.IOException e) {
                 break;
             }
         }
-        */
-        displayedHourInMillis = nextHourInMillis-currentHourInMillis;
 
+        //TODO: Sort hoursInMillis
+
+        // Finding the closest next hour
+        for(int j=1; j<=16; j++){
+            if(hoursInMillis.get(j) > currentHourInMillis){
+                nextHourInMillis = hoursInMillis.get(j);
+                break;
+            }
+        }
+
+        displayedHourInMillis = nextHourInMillis-currentHourInMillis;
 
         c.setTimeInMillis(displayedHourInMillis);
         String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
@@ -76,8 +100,6 @@ public class AppWidget extends AppWidgetProvider {
         super.onEnabled(context);
         Log.d(LOG_TAG, "Widget Provider enabled.  Starting timer to update widget every 60 seconds");
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-
 
         alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 60000, createTimerTickIntent(context));
     }
