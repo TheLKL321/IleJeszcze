@@ -15,8 +15,11 @@ import android.widget.TextView;
 
 import java.io.FileInputStream;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 
@@ -29,57 +32,78 @@ public class AppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Construct the RemoteViews object
+        // Reading switch state
+        String line = "";
+        try {
+            FileInputStream fIn = context.openFileInput("ifOn");
+            int c;
+            while ((c = fIn.read()) != -1) {
+                line = line + Character.toString((char) c);
+            }
+            fIn.close();
+        } catch (java.io.IOException e) {
+            // Everything is fine, file just wasn't created yet
+        }
+        boolean ifOn = Boolean.valueOf(line);
+
+
+        // Constructing the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget);
 
-        // Get current hour in millis + minutes in millis
-        c.setTimeInMillis(System.currentTimeMillis());
-        long currentHourInMillis = TimeUnit.HOURS.toMillis(c.get(Calendar.HOUR_OF_DAY)) + TimeUnit.MINUTES.toMillis(c.get(Calendar.MINUTE));
-        long nextHourInMillis = 0;
-        long displayedHourInMillis;
+        if(ifOn) {
+            // Get current hour in millis + minutes in millis
+            c.setTimeInMillis(System.currentTimeMillis());
+            long currentHourInMillis = TimeUnit.HOURS.toMillis(c.get(Calendar.HOUR_OF_DAY)) + TimeUnit.MINUTES.toMillis(c.get(Calendar.MINUTE));
+            long nextHourInMillis = 0;
+            long displayedHourInMillis;
 
-        // Filling hoursInMillis with data from file
-        int i=1;
-        Map<Integer, Long> hoursInMillis = new TreeMap<>();
-        while (i<17) {
-            try {
-                FileInputStream fIn = context.openFileInput("hour"+String.valueOf(i));
-                int c;
-                String hour = "";
-                while ((c = fIn.read()) != -1) {
-                    hour = hour + Character.toString((char) c);
+            // Filling hoursInMillis with data from file
+            int i = 1;
+            Set<Long> hoursInMillis = new TreeSet<>();
+            while (i < 17) {
+                try {
+                    FileInputStream fIn = context.openFileInput("hour" + String.valueOf(i));
+                    int c;
+                    String hour = "";
+                    while ((c = fIn.read()) != -1) {
+                        hour = hour + Character.toString((char) c);
+                    }
+                    fIn.close();
+
+                    hoursInMillis.add(Long.valueOf(hour));
+                    i++;
+
+                } catch (java.io.IOException e) {
+                    break;
                 }
-                fIn.close();
-
-                hoursInMillis.put(i, Long.valueOf(hour));
-                i++;
-
-            } catch (java.io.IOException e) {
-                break;
             }
-        }
 
-        //TODO: Sort hoursInMillis
+            //TODO: Sort hoursInMillis
 
-        // Finding the closest next hour
-        for(int j=1; j<=16; j++){
-            if(hoursInMillis.get(j) > currentHourInMillis){
-                nextHourInMillis = hoursInMillis.get(j);
-                break;
+            // Finding the closest next hour
+            for (Long millis : hoursInMillis) {
+                if(millis > currentHourInMillis){
+                    nextHourInMillis = millis;
+                    break;
+                }
             }
+
+            displayedHourInMillis = nextHourInMillis - currentHourInMillis;
+
+            c.setTimeInMillis(displayedHourInMillis);
+            String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
+            String minutes = String.valueOf(c.get(Calendar.MINUTE));
+
+            if (Integer.parseInt(minutes) < 10) minutes = "0" + minutes;
+            views.setTextViewText(R.id.widgetText, hour + ":" + minutes);
         }
-
-        displayedHourInMillis = nextHourInMillis-currentHourInMillis;
-
-        c.setTimeInMillis(displayedHourInMillis);
-        String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
-        String minutes = String.valueOf(c.get(Calendar.MINUTE));
-
-        if(Integer.parseInt(minutes)<10) minutes = "0" + minutes;
-        views.setTextViewText(R.id.widgetText, hour + ":" + minutes);
+        else {
+            views.setTextViewText(R.id.widgetText, "OFF");
+        }
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
+
     }
 
     @Override
@@ -99,7 +123,7 @@ public class AppWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         super.onEnabled(context);
         Log.d(LOG_TAG, "Widget Provider enabled.  Starting timer to update widget every 60 seconds");
-        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 60000, createTimerTickIntent(context));
     }
@@ -114,7 +138,7 @@ public class AppWidget extends AppWidgetProvider {
 
     /**
      * Custom Intent name that is used by the 'AlarmManager' to tell us to update the
-     clock once per second.
+     * clock once per second.
      */
     public static String TIMER_WIDGET_UPDATE = "com.thelkl321.ilejeszcze.widget.TIMER_WIDGET_UPDATE";
 
@@ -129,7 +153,7 @@ public class AppWidget extends AppWidgetProvider {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int ids[] = appWidgetManager.getAppWidgetIds(thisAppWidget);
 
-            for (int appWidgetID: ids) {
+            for (int appWidgetID : ids) {
                 updateAppWidget(context, appWidgetManager, appWidgetID);
             }
         }

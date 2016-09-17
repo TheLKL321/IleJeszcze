@@ -1,5 +1,6 @@
 package com.thelkl321.ilejeszcze;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -8,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -88,9 +93,24 @@ public class MainActivity extends AppCompatActivity {
         deleteFile("hour" + deleteButtonNumber);
     }
 
-    public void loadData(){
+    private void loadData(){
         int i=1;
         Map<Integer, Long> hoursInMillis = new TreeMap<>();
+
+        // Getting and setting switch state
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        try {
+            FileInputStream fIn = openFileInput("ifOn");
+            String line = "";
+            int c;
+            while ((c = fIn.read()) != -1) {
+                line = line + Character.toString((char) c);
+            }
+            toggle.setChecked(Boolean.valueOf(line));
+            fIn.close();
+        } catch (java.io.IOException e) {
+            // Everything is fine, file just wasn't created yet
+        }
 
         // Filling hoursInMillis with data from file
         while (i<17) {
@@ -156,6 +176,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: Create on/off switch functionality
-    //TODO: Looks
+    public void toggleSwitch(View v){
+        Switch toggle = (Switch) findViewById(R.id.switch1);
+        if(toggle.isChecked()){
+            FileOutputStream fOut;
+            try {
+                fOut = openFileOutput("ifOn", Context.MODE_PRIVATE);
+                fOut.write("true".getBytes());
+                fOut.close();
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            FileOutputStream fOut;
+            try {
+                fOut = openFileOutput("ifOn", Context.MODE_PRIVATE);
+                fOut.write("false".getBytes());
+                fOut.close();
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //TODO: Themes
 }
