@@ -24,10 +24,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/switch1"
-        android:checked="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="3dp" />
+        android:layout_marginBottom="3dp"
+        android:onClick="toggleSwitch"/>
 
     <TableLayout
         android:layout_width="219dp"
