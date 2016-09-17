@@ -78,8 +78,6 @@ public class AppWidget extends AppWidgetProvider {
                 }
             }
 
-            //TODO: Sort hoursInMillis
-
             // Finding the closest next hour
             for (Long millis : hoursInMillis) {
                 if(millis > currentHourInMillis){
@@ -136,10 +134,7 @@ public class AppWidget extends AppWidgetProvider {
         alarmManager.cancel(createTimerTickIntent(context));
     }
 
-    /**
-     * Custom Intent name that is used by the 'AlarmManager' to tell us to update the
-     * clock once per second.
-     */
+
     public static String TIMER_WIDGET_UPDATE = "com.thelkl321.ilejeszcze.widget.TIMER_WIDGET_UPDATE";
 
     @Override

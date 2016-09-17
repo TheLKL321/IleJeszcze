@@ -32,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     static Calendar c = Calendar.getInstance();
 
-    // THE LIST OF HOURS IN MILLIS + MINUTES IN MILLIS
-    //public static Map<Integer, Long> hoursInMillis = new TreeMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

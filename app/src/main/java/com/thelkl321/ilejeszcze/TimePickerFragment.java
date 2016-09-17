@@ -53,9 +53,6 @@ public class TimePickerFragment extends DialogFragment
         text.setText(hourOfDay + getString(R.string.colon) + minutesOnClock);
         text.setVisibility(View.VISIBLE);
 
-        // pass hour to MainActivity
-        // MainActivity.hoursInMillis.put(buttonNumber, TimeUnit.HOURS.toMillis(hourOfDay)+TimeUnit.MINUTES.toMillis(minute));
-
         // Save the picked hour
         String string = String.valueOf(TimeUnit.HOURS.toMillis(hourOfDay)+TimeUnit.MINUTES.toMillis(minute));
         FileOutputStream fOut;
