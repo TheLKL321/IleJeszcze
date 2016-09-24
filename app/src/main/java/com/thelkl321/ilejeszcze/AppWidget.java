@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.io.FileInputStream;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -86,14 +87,18 @@ public class AppWidget extends AppWidgetProvider {
                 }
             }
 
-            displayedHourInMillis = nextHourInMillis - currentHourInMillis;
+            if(nextHourInMillis!=0) {
+                displayedHourInMillis = nextHourInMillis - currentHourInMillis;
 
-            c.setTimeInMillis(displayedHourInMillis);
-            String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
-            String minutes = String.valueOf(c.get(Calendar.MINUTE));
-
-            if (Integer.parseInt(minutes) < 10) minutes = "0" + minutes;
-            views.setTextViewText(R.id.widgetText, hour + ":" + minutes);
+                String text = String.format(Locale.US, "%d:%02d",
+                        TimeUnit.MILLISECONDS.toHours(displayedHourInMillis),
+                        TimeUnit.MILLISECONDS.toMinutes(displayedHourInMillis) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(displayedHourInMillis))
+                );
+                views.setTextViewText(R.id.widgetText, text);
+            }
+            //TODO: What happens when the next hour is tomorrow?
+            else views.setTextViewText(R.id.widgetText, "Tomorrow");
         }
         else {
             views.setTextViewText(R.id.widgetText, "OFF");
