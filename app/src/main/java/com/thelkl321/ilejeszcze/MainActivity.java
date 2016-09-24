@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -29,9 +30,6 @@ import java.util.concurrent.TimeUnit;
 import static android.content.res.Resources.*;
 
 public class MainActivity extends AppCompatActivity {
-
-    static Calendar c = Calendar.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,10 +132,11 @@ public class MainActivity extends AppCompatActivity {
         for(int j=1; j<=i; j++){
 
             // Get hour and minutes
-            c.setTimeInMillis(hoursInMillis.get(j));
-            String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
-            String minutes = String.valueOf(c.get(Calendar.MINUTE));
-
+            String text = String.format(Locale.US, "%d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(hoursInMillis.get(j)),
+                    TimeUnit.MILLISECONDS.toMinutes(hoursInMillis.get(j)) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(hoursInMillis.get(j)))
+            );
 
             // Make the button invisible
             int buttonId = getResources().getIdentifier("button" + j, "id", "com.thelkl321.ilejeszcze");
@@ -146,10 +145,9 @@ public class MainActivity extends AppCompatActivity {
 
             // Make the textView visible and set it
             int textID = getResources().getIdentifier("textView" + j, "id", "com.thelkl321.ilejeszcze");
-            TextView text = (TextView) findViewById(textID);
-            if(Integer.parseInt(minutes)<10) minutes = "0" + minutes;
-            text.setText(hour + getString(R.string.colon) + minutes);
-            text.setVisibility(View.VISIBLE);
+            TextView textView = (TextView) findViewById(textID);
+            textView.setText(text);
+            textView.setVisibility(View.VISIBLE);
 
             // Make the next button visible
             Button nextButton;
@@ -198,5 +196,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: Themes
+    //TODO: Themes, screen orientation
 }
