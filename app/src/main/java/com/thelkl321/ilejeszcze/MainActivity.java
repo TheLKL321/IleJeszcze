@@ -58,26 +58,26 @@ public class MainActivity extends AppCompatActivity {
         int deleteButtonNumber = Integer.parseInt((String) v.getTag());
 
         // stuff with time text
-        int textID = getResources().getIdentifier("textView" + deleteButtonNumber, "id", "com.thelkl321.ilejeszcze");
+        int textID = getResources().getIdentifier("textView" + deleteButtonNumber, "id", getPackageName());
         TextView text = (TextView) findViewById(textID);
         text.setText(getString(R.string._00_00));
         text.setVisibility(View.INVISIBLE);
 
         // stuff with next button
         if (deleteButtonNumber != 16) {
-            int nextButtonId = getResources().getIdentifier("button" + (deleteButtonNumber+1), "id", "com.thelkl321.ilejeszcze");
+            int nextButtonId = getResources().getIdentifier("button" + (deleteButtonNumber+1), "id", getPackageName());
             Button nextButton = (Button) findViewById(nextButtonId);
             nextButton.setVisibility(View.INVISIBLE);
         }
 
         // stuff with current button
-        int buttonId = getResources().getIdentifier("button" + deleteButtonNumber, "id", "com.thelkl321.ilejeszcze");
+        int buttonId = getResources().getIdentifier("button" + deleteButtonNumber, "id", getPackageName());
         Button button = (Button) findViewById(buttonId);
         button.setVisibility(View.VISIBLE);
 
         // stuff with previous delete button
         if (deleteButtonNumber != 1) {
-            int previousDeleteButtonId = getResources().getIdentifier("delete" + (deleteButtonNumber-1), "id", "com.thelkl321.ilejeszcze");
+            int previousDeleteButtonId = getResources().getIdentifier("delete" + (deleteButtonNumber-1), "id", getPackageName());
             Button previousDeleteButton = (Button) findViewById(previousDeleteButtonId);
             previousDeleteButton.setVisibility(View.VISIBLE);
         }
@@ -138,13 +138,14 @@ public class MainActivity extends AppCompatActivity {
                             TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(hoursInMillis.get(j)))
             );
 
+
             // Make the button invisible
-            int buttonId = getResources().getIdentifier("button" + j, "id", "com.thelkl321.ilejeszcze");
+            int buttonId = getResources().getIdentifier("button" + j, "id", getPackageName());
             Button button = (Button) findViewById(buttonId);
             button.setVisibility(View.INVISIBLE);
 
             // Make the textView visible and set it
-            int textID = getResources().getIdentifier("textView" + j, "id", "com.thelkl321.ilejeszcze");
+            int textID = getResources().getIdentifier("textView" + j, "id", getPackageName());
             TextView textView = (TextView) findViewById(textID);
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);
@@ -152,20 +153,20 @@ public class MainActivity extends AppCompatActivity {
             // Make the next button visible
             Button nextButton;
             if (j != 16) {
-                int nextButtonId = getResources().getIdentifier("button" + (j+1), "id", "com.thelkl321.ilejeszcze");
+                int nextButtonId = getResources().getIdentifier("button" + (j+1), "id", getPackageName());
                 nextButton = (Button) findViewById(nextButtonId);
                 nextButton.setVisibility(View.VISIBLE);
             }
 
             // Make the previous delete button invisible
             if(j !=1) {
-                int previousDeleteButtonId = getResources().getIdentifier("delete" + (j-1), "id", "com.thelkl321.ilejeszcze");
+                int previousDeleteButtonId = getResources().getIdentifier("delete" + (j-1), "id", getPackageName());
                 Button previousDeleteButton = (Button) findViewById(previousDeleteButtonId);
                 previousDeleteButton.setVisibility(View.INVISIBLE);
             }
 
             // Make the delete button visible
-            int deleteButtonId = getResources().getIdentifier("delete" + j, "id", "com.thelkl321.ilejeszcze");
+            int deleteButtonId = getResources().getIdentifier("delete" + j, "id", getPackageName());
             Button deleteButton = (Button) findViewById(deleteButtonId);
             deleteButton.setVisibility(View.VISIBLE);
 
