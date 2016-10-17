@@ -935,7 +935,8 @@
             android:gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            tools:ignore="TooManyViews" />
+            tools:ignore="TooManyViews"
+            android:onClick="toggleSwitch" />
     </RelativeLayout>
 
 </LinearLayout>

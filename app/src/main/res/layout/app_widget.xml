@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin"
-    android:background="#FFFFFFFF">
+    android:background="@drawable/widget_layout"
+    android:id="@+id/widgetFrame"
+    android:clickable="true">
 
 
     <TextView

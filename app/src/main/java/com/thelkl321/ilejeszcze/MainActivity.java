@@ -205,5 +205,5 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    //TODO: Themes, screen orientation
+    //TODO: screen orientation
 }
