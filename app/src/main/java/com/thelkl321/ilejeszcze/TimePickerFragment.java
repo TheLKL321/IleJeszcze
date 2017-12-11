@@ -18,6 +18,8 @@ import java.io.FileOutputStream;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
+import static android.R.attr.button;
+
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
@@ -45,7 +47,7 @@ public class TimePickerFragment extends DialogFragment
 
         // get text id and create textView
         int buttonNumber = Integer.parseInt((String) button.getTag());   //Buttons have tags 1,2,3... and each has corresponding textView
-        int textID = getResources().getIdentifier("textView" + buttonNumber, "id", "com.thelkl321.ilejeszcze");
+        int textID = getResources().getIdentifier("textView" + buttonNumber, "id", getActivity().getPackageName());
         TextView text = (TextView) getActivity().findViewById(textID);
 
         String minutesOnClock = Integer.toString(minute);
@@ -67,20 +69,20 @@ public class TimePickerFragment extends DialogFragment
         // create the next button
         Button nextButton;
         if (buttonNumber != 16) {
-            int nextButtonId = getResources().getIdentifier("button" + (buttonNumber+1), "id", "com.thelkl321.ilejeszcze");
+            int nextButtonId = getResources().getIdentifier("button" + (buttonNumber+1), "id", getActivity().getPackageName());
             nextButton = (Button) getActivity().findViewById(nextButtonId);
             nextButton.setVisibility(View.VISIBLE);
         }
 
         // create the previous delete button
         if(buttonNumber !=1) {
-            int previousDeleteButtonId = getResources().getIdentifier("delete" + (buttonNumber - 1), "id", "com.thelkl321.ilejeszcze");
+            int previousDeleteButtonId = getResources().getIdentifier("delete" + (buttonNumber - 1), "id", getActivity().getPackageName());
             Button previousDeleteButton = (Button) getActivity().findViewById(previousDeleteButtonId);
             previousDeleteButton.setVisibility(View.INVISIBLE);
         }
 
         // create the delete button
-        int deleteButtonId = getResources().getIdentifier("delete" + (buttonNumber), "id", "com.thelkl321.ilejeszcze");
+        int deleteButtonId = getResources().getIdentifier("delete" + (buttonNumber), "id", getActivity().getPackageName());
         Button deleteButton = (Button) getActivity().findViewById(deleteButtonId);
         deleteButton.setVisibility(View.VISIBLE);
 
